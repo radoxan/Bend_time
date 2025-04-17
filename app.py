@@ -1,6 +1,7 @@
 import streamlit as st
 import pycaret.regression
 import pandas as pd
+import time
 
 def predict(capacity, weigth, width, length, bends):
     df = pd.DataFrame({
@@ -41,3 +42,4 @@ if st.button(label="Oblicz"):
         st.header('Podaj ilość sztuk')
     else:
         predict(capacity, weigth, width, length, bends)
+        time.sleep(5)
