@@ -22,11 +22,11 @@ def predict(capacity, weigth, width, length, bends):
 
 st.title("Oblicz czas wykonania zlecenia")
 
-length = st.number_input(label="Podaj długość")
-width = st.number_input(label="Podaj rozwinięcie")
-weigth = st.number_input(label="Podaj wagę")
-bends = st.number_input(label="Ilość gięć")
-capacity = st.number_input(label="Ilość sztuk")
+length = st.number_input(label="Podaj długość", max_value=6100, min_value=0)
+width = st.number_input(label="Podaj rozwinięcie", max_value=3000, min_value=0)
+weigth = st.number_input(label="Podaj wagę", min_value=0, max_value=100)
+bends = st.number_input(label="Ilość gięć", step=1, min_value=0, max_value=12)
+capacity = st.number_input(label="Ilość sztuk", step=1, min_value=0)
 
 if st.button(label="Oblicz"):
     predict(capacity, weigth, width, length, bends)
