@@ -12,7 +12,7 @@ def predict(model_name, df):
     formatted_seconds = f"{seconds:02}"
     st.header(f'Czas na wykonanie elementów to: {hours}:{formatted_minutes}:{formatted_seconds}')
 
-st.title("Oblicz czas wykonania zlecenia")
+st.title("Oblicz czas wykonania zlecenia.")
 
 length = st.number_input(label="Podaj długość")
 width = st.number_input(label="Podaj rozwinięcie")
