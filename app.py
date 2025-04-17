@@ -29,4 +29,15 @@ bends = st.number_input(label="Ilość gięć", step=1, min_value=0, max_value=1
 capacity = st.number_input(label="Ilość sztuk", step=1, min_value=0)
 
 if st.button(label="Oblicz"):
-    predict(capacity, weigth, width, length, bends)
+    if length == 0:
+        st.header("Podaj długość")
+    elif width == 0:
+        st.header('Podaj rozwinięcie')
+    elif weigth == 0:
+        st.header('Podaj wagę')
+    elif bends == 0:
+        st.header('Podaj ilość gięć')
+    elif capacity == 0:
+        st.header('Podaj ilość sztuk')
+    else:
+        predict(capacity, weigth, width, length, bends)
