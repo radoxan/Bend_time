@@ -10,10 +10,10 @@ st.set_page_config(layout="wide")
 
 # Inicjalizacja session_state
 if 'choosen_parts' not in st.session_state:
-    st.session_state['choosen_parts'] = pd.DataFrame()
+    st.session_state['choosen_parts'] = pd.DataFrame(st.session_state['choosen_parts'])
 
 if 'new_df' not in st.session_state:
-    st.session_state['new_df'] = pd.DataFrame()
+    st.session_state['new_df'] = pd.DataFrame(st.session_state['new_df'])
 
 if 'input_name' not in st.session_state:
     st.session_state['input_name'] = ''
