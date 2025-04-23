@@ -10,10 +10,10 @@ st.set_page_config(layout="wide")
 
 # Inicjalizacja session_state
 if 'choosen_parts' not in st.session_state:
-    st.session_state['choosen_parts'] = pd.DataFrame(st.session_state['choosen_parts'])
+    st.session_state['choosen_parts'] = pd.DataFrame()
 
 if 'new_df' not in st.session_state:
-    st.session_state['new_df'] = pd.DataFrame(st.session_state['new_df'])
+    st.session_state['new_df'] = pd.DataFrame()
 
 if 'input_name' not in st.session_state:
     st.session_state['input_name'] = ''
@@ -88,10 +88,6 @@ def dodaj_do_kolejki():
 def czysc_tabele():
     clear_df = pd.DataFrame()
     st.session_state['choosen_parts'] = clear_df
-
-# Wczytanie danych
-df_1 = pd.read_excel('Bend_parts_data.xlsx')
-df_1.to_json('parts.json', orient='records', lines=True)
 
 # Odczyt danych z pliku JSON
 parts_df = pd.read_json('parts.json', lines=True)
