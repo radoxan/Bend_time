@@ -109,10 +109,14 @@ parts_df = pd.read_json('parts.json', lines=True)
 parts_df['Masa'] = pd.to_numeric(parts_df['Masa'])
 parts_df = parts_df.dropna(subset=['Numer'])
 
+
+st.title('Oszacuj czas gięcia zleceń w Temared')
+st.subheader('by Radosław Krupa')
+
 # Streamlit input and selection
 col1, col2 = st.columns(2)
 with col1:
-    st.title('1. Wyszukaj element gięty:')
+    st.header('1. Wyszukaj element gięty:')
     options = parts_df['Numer']
     search_number = st.text_input('Wprowadź numer do wyszukania')
     wyniki = parts_df[parts_df['Numer'].str.startswith(search_number)]['Numer'].tolist()
@@ -136,20 +140,20 @@ with col1:
     
     st.markdown('<hr>', unsafe_allow_html=True)
     
-    st.title('3. Stwórz tabelę:')
+    st.header('3. Stwórz tabelę:')
     st.dataframe(st.session_state['choosen_parts'])
     st.button(label='Wyczyść tabelę', on_click=czysc_tabele)
-    st.title(f'Suma czasu: {st.session_state["sumary_time"]}')
+    st.header(f'Suma czasu: {st.session_state["sumary_time"]}')
 
 with col2:
-    st.title("2. Wprowadź dane:")
+    st.header("2. Wprowadź dane:")
     name = st.text_input(label="Podaj nazwę", value=st.session_state['input_name'])
     index = st.text_input(label="Podaj numer rysunku", value=st.session_state['input_index'])
     length = st.number_input(label="Podaj długość", max_value=float(6100), min_value=float(0), value=float(st.session_state['input_length']), step=float(1))
     width = st.number_input(label="Podaj rozwinięcie", max_value=float(3000), min_value=float(0), value=float(st.session_state['input_width']), step=float(1))
     weigth = st.number_input(label="Podaj wagę", min_value=float(0), max_value=float(100), step=float(1), value=float(st.session_state['input_weight']))
-    bends = st.number_input(label="Ilość gięć", step=int(1), min_value=int(0), max_value=int(12), value=int(st.session_state['bends']))
-    capacity = st.number_input(label="Ilość sztuk", step=int(1), min_value=int(0), value=int(st.session_state['capacity']))
+    bends = st.number_input(label="Ilość gięć", step=int(1), min_value=int(0), max_value=int(12), value=int(st.session_state['input_bends']))
+    capacity = st.number_input(label="Ilość sztuk", step=int(1), min_value=int(0), value=int(st.session_state['input_capacity']))
 
     st.session_state['new_df'] = pd.DataFrame({
         'Capacity': [capacity],
