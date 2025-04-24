@@ -50,6 +50,9 @@ if 'input_capacity' not in st.session_state:
 if 'capacity' not in st.session_state:
     st.session_state['capacity'] = 0
 
+if 'sumary_time' not in st.session_state:
+    st.session_state['sumary_time'] = 0
+
 def predict(capacity, weigth, width, length, bends):
     st.session_state['new_df'] = pd.DataFrame({
     'Capacity': [capacity],
@@ -81,13 +84,25 @@ def przechwyc_wartosci():
     st.session_state['input_capacity'] = int(st.session_state['capacity'])
     st.session_state['input_index'] = str(st.session_state['index'])
 
+def licz_czas():
+    df = pd.DataFrame()
+    df['time'] = pd.to_timedelta(st.session_state['choosen_parts']['Time'])
+    total_time = df['time'].sum()
+    total_seconds = int(total_time.total_seconds())
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    total_time_str = f"{hours:02}:{minutes:02}:{seconds:02}"
+    st.session_state['sumary_time'] = total_time_str
+
 def dodaj_do_kolejki():
     st.session_state['new_df']['Index'] = st.session_state['input_index']
     st.session_state['choosen_parts'] = pd.concat([st.session_state['choosen_parts'],st.session_state['new_df']])
+    licz_czas()
 
 def czysc_tabele():
     clear_df = pd.DataFrame()
     st.session_state['choosen_parts'] = clear_df
+    st.session_state['sumary_time'] = 0
 
 # Odczyt danych z pliku JSON
 parts_df = pd.read_json('parts.json', lines=True)
@@ -97,7 +112,7 @@ parts_df = parts_df.dropna(subset=['Numer'])
 # Streamlit input and selection
 col1, col2 = st.columns(2)
 with col1:
-    st.title('Wyszukaj plik:')
+    st.title('1. Wyszukaj element gięty:')
     options = parts_df['Numer']
     search_number = st.text_input('Wprowadź numer do wyszukania')
     wyniki = parts_df[parts_df['Numer'].str.startswith(search_number)]['Numer'].tolist()
@@ -121,12 +136,13 @@ with col1:
     
     st.markdown('<hr>', unsafe_allow_html=True)
     
-    st.title('Stwórz tabelę:')
+    st.title('3. Stwórz tabelę:')
     st.dataframe(st.session_state['choosen_parts'])
     st.button(label='Wyczyść tabelę', on_click=czysc_tabele)
+    st.title(f'Suma czasu: {st.session_state["sumary_time"]}')
 
 with col2:
-    st.title("Wprowadź dane:")
+    st.title("2. Wprowadź dane:")
     name = st.text_input(label="Podaj nazwę", value=st.session_state['input_name'])
     index = st.text_input(label="Podaj numer rysunku", value=st.session_state['input_index'])
     length = st.number_input(label="Podaj długość", max_value=float(6100), min_value=float(0), value=float(st.session_state['input_length']), step=float(1))
