@@ -110,15 +110,16 @@ parts_df['Masa'] = pd.to_numeric(parts_df['Masa'])
 parts_df = parts_df.dropna(subset=['Numer'])
 
 
-st.title('Oszacuj czas gięcia zleceń w Temared')
-st.subheader('by Radosław Krupa')
+st.title('Oszacuj czas gięcia zleceń w Temared by Radosław Krupa')
+my_info = ('W pierwszej komórce wyszukaj indeks elementu. Możesz wpisać tylko początek a następnie wyszukać i wybrać interesujący cię element w rozwijanej liście poniżej. Dalej wpisz ilość elementów do wykoniania i naciśnij przycisk "Wczytaj dane". Informacje o datalu zostaną wczytane do pól po prawej stronie. Jeśli nie znajdziesz interesującego cię elementu na liście możesz uzupełnić samodzielnie pola po prawej stronie. Następnie wciśnij przycisk "Oblicz". Po oszacowaniu czasu wykonania możesz zapisać wynik w tabeli wciskając przycisk "Dodaj do kolejki". Po lewej stronie utworzy się tabela i czasy wszystkich zleceń zostaną zsumowane. Algorytm oszacowuje czas wykonania zlecenia od momentu pobrania w kiosku do momentu zaraportowania wykonania zlecenia w IPO. Jeśli operator w ramach jednego zlecenia ma do wykonania 20 kompletów w polu "Podaj ilość" należy wprowadzić 40 sztuk jednej strony.')
+st.markdown(f'<div class="wrapped-text">{my_info}</div>', unsafe_allow_html=True)
 
 # Streamlit input and selection
 col1, col2 = st.columns(2)
 with col1:
     st.header('1. Wyszukaj element gięty:')
     options = parts_df['Numer']
-    search_number = st.text_input('Wprowadź numer do wyszukania')
+    search_number = st.text_input('Wprowadź początek numeru rysunkowego do wyszukania')
     wyniki = parts_df[parts_df['Numer'].str.startswith(search_number)]['Numer'].tolist()
     choosen_draw = st.selectbox("Wybierz jeden z poniższych plików", wyniki)
     st.text(f'Wybrano plik: {choosen_draw}')
