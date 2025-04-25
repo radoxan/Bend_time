@@ -53,6 +53,32 @@ if 'capacity' not in st.session_state:
 if 'sumary_time' not in st.session_state:
     st.session_state['sumary_time'] = 0
 
+
+def wycena_1(weight, bend_nums, price):
+    w = (weight*0.1)+((bend_nums-1.0)*(price-((bend_nums-1)*0.01)))
+    if w < 0:
+        w = 0
+    return w
+
+def wycena_2(bend_nums, price):
+    w = (price-((bend_nums-1)*0.01))*bend_nums
+    if w < 0:
+        w = 0
+    return w
+
+def wycena_3(weight, bend_nums, multi):
+    w = (weight*0.1)*(1.0+(multi*(bend_nums-1)))
+    if w < 0:
+        w = 0
+    return w
+
+def wycena_max(weight, bend_nums, price, multi):
+    w1 = wycena_1(weight, bend_nums, price)
+    w2 = wycena_2(bend_nums, price)
+    w3 = wycena_3(weight, bend_nums, multi)
+    w_max = max(w1,w2,w3)
+    return w_max
+
 def predict(capacity, weigth, width, length, bends):
     st.session_state['new_df'] = pd.DataFrame({
     'Capacity': [capacity],
@@ -125,16 +151,19 @@ with col1:
     st.text(f'Wybrano plik: {choosen_draw}')
     choosen_row = parts_df.loc[parts_df['Numer'] == choosen_draw]
     st.dataframe(choosen_row)
-
     capacity = st.number_input('Podaj ilość', step=1, min_value=1)
     st.session_state['capacity'] = capacity    
     st.write(f'Ilość elementów do wykonania: {capacity}')
-    st.session_state['name'] = choosen_row['Nazwa'].astype(str).iloc[0]
-    st.session_state['index'] = choosen_row['Numer'].astype(str).iloc[0]
-    st.session_state['weight'] = choosen_row['Masa'].astype(float).iloc[0]
-    st.session_state['width'] = choosen_row['Rozwinięcie'].iloc[0]
-    st.session_state['length'] = choosen_row['Długość'].astype(float).iloc[0]
-    st.session_state['bends'] = choosen_row['ilość gięć'].iloc[0]
+    try:
+        st.session_state['name'] = choosen_row['Nazwa'].astype(str).iloc[0]
+        st.session_state['index'] = choosen_row['Numer'].astype(str).iloc[0]
+        st.session_state['weight'] = choosen_row['Masa'].astype(float).iloc[0]
+        st.session_state['width'] = choosen_row['Rozwinięcie'].iloc[0]
+        st.session_state['length'] = choosen_row['Długość'].astype(float).iloc[0]
+        st.session_state['bends'] = choosen_row['ilość gięć'].iloc[0]
+    except IndexError:
+        st.warning('Nie znaleziono takiego indeksu')
+
     choosen_row['Ilość'] = st.session_state['capacity']
     st.button(label="Wczytaj dane wybranego detalu", on_click=przechwyc_wartosci)
 
@@ -179,3 +208,9 @@ with col2:
             predict(capacity, weigth, width, length, bends)
 
     st.button(label='Dodaj do kolejki', on_click= dodaj_do_kolejki)
+
+    st.markdown('<hr>', unsafe_allow_html=True)
+    wycena = wycena_max(weigth, bends, 0.22, 0.25)
+    st.subheader(f'Wycena elementu: {wycena:.4f}zł')
+    wycena_zlecenia = wycena * capacity
+    st.subheader(f'Wycena zlecenia: {wycena_zlecenia:.4f}zł')
