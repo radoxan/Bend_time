@@ -53,6 +53,8 @@ if 'capacity' not in st.session_state:
 if 'sumary_time' not in st.session_state:
     st.session_state['sumary_time'] = 0
 
+if 'wycena_zlecenia' not in st.session_state:
+    st.session_state['wycena_zlecenia'] = 0
 
 def wycena_1(weight, bend_nums, price):
     w = (weight*0.1)+((bend_nums-1.0)*(price-((bend_nums-1)*0.01)))
@@ -122,6 +124,7 @@ def licz_czas():
 
 def dodaj_do_kolejki():
     st.session_state['new_df']['Index'] = st.session_state['input_index']
+    st.session_state['new_df']['Price'] = st.session_state['wycena_zlecenia']
     st.session_state['choosen_parts'] = pd.concat([st.session_state['choosen_parts'],st.session_state['new_df']])
     licz_czas()
 
@@ -174,6 +177,11 @@ with col1:
     st.dataframe(st.session_state['choosen_parts'])
     st.button(label='Wyczyść tabelę', on_click=czysc_tabele)
     st.header(f'Suma czasu: {st.session_state["sumary_time"]}')
+    try:
+        sum_price = st.session_state['choosen_parts']['Price'].sum()
+    except:
+        sum_price = 0
+    st.header(f'Suma akordu: {sum_price:.4f}zł')
 
 with col2:
     st.header("2. Wprowadź dane:")
@@ -213,4 +221,5 @@ with col2:
     wycena = wycena_max(weigth, bends, 0.22, 0.25)
     st.subheader(f'Wycena elementu: {wycena:.4f}zł')
     wycena_zlecenia = wycena * capacity
+    st.session_state['wycena_zlecenia'] = wycena_zlecenia
     st.subheader(f'Wycena zlecenia: {wycena_zlecenia:.4f}zł')
