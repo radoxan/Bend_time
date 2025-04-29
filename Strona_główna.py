@@ -16,6 +16,8 @@ def initialize_session_state():
         'name': '',
         'input_index': '',
         'index': '',
+        'my_info': '',
+        'info_visible': 0,
         'input_length': 0,
         'length': 0,
         'input_weight': 0,
@@ -111,11 +113,13 @@ def czysc_tabele():
     st.session_state['choosen_parts'] = clear_df
     st.session_state['sumary_time'] = 0
 
-def show_modal():
-    with st.info("Wyskakujące okienko"):
-        my_info = ('W pierwszej komórce wyszukaj indeks elementu. Możesz wpisać tylko początek a następnie wyszukać i wybrać interesujący cię element w rozwijanej liście poniżej. Dalej wpisz ilość elementów do wykoniania i naciśnij przycisk "Wczytaj dane". Informacje o datalu zostaną wczytane do pól po prawej stronie. Jeśli nie znajdziesz interesującego cię elementu na liście możesz uzupełnić samodzielnie pola po prawej stronie. Następnie wciśnij przycisk "Oblicz". Po oszacowaniu czasu wykonania możesz zapisać wynik w tabeli wciskając przycisk "Dodaj do kolejki". Po lewej stronie utworzy się tabela i czasy wszystkich zleceń zostaną zsumowane. Algorytm oszacowuje czas wykonania zlecenia od momentu pobrania w kiosku do momentu zaraportowania wykonania zlecenia w IPO. Jeśli operator w ramach jednego zlecenia ma do wykonania 20 kompletów w polu "Podaj ilość" należy wprowadzić 40 sztuk jednej strony.')
-        st.write(my_info)
-
+def show_info():
+    if st.session_state['info_visible'] == 0:        
+        st.session_state['my_info'] = ('W pierwszej komórce wyszukaj indeks elementu. Możesz wpisać tylko początek a następnie wyszukać i wybrać interesujący cię element w rozwijanej liście poniżej. Dalej wpisz ilość elementów do wykoniania i naciśnij przycisk "Wczytaj dane". Informacje o datalu zostaną wczytane do pól po prawej stronie. Jeśli nie znajdziesz interesującego cię elementu na liście możesz uzupełnić samodzielnie pola po prawej stronie. Następnie wciśnij przycisk "Oblicz". Po oszacowaniu czasu wykonania możesz zapisać wynik w tabeli wciskając przycisk "Dodaj do kolejki". Po lewej stronie utworzy się tabela i czasy wszystkich zleceń zostaną zsumowane. Algorytm oszacowuje czas wykonania zlecenia od momentu pobrania w kiosku do momentu zaraportowania wykonania zlecenia w IPO. Jeśli operator w ramach jednego zlecenia ma do wykonania 20 kompletów w polu "Podaj ilość" należy wprowadzić 40 sztuk jednej strony.')
+        st.session_state['info_visible'] = 1
+    else:
+        st.session_state['my_info'] = ''
+        st.session_state['info_visible'] = 0
 
 # Odczyt danych z pliku JSON
 parts_df = pd.read_json('parts.json', lines=True)
@@ -127,10 +131,9 @@ initialize_session_state()
 
 st.title('Oszacuj czas gięcia zleceń w Temared by Radosław Krupa')
 # my_info = ('W pierwszej komórce wyszukaj indeks elementu. Możesz wpisać tylko początek a następnie wyszukać i wybrać interesujący cię element w rozwijanej liście poniżej. Dalej wpisz ilość elementów do wykoniania i naciśnij przycisk "Wczytaj dane". Informacje o datalu zostaną wczytane do pól po prawej stronie. Jeśli nie znajdziesz interesującego cię elementu na liście możesz uzupełnić samodzielnie pola po prawej stronie. Następnie wciśnij przycisk "Oblicz". Po oszacowaniu czasu wykonania możesz zapisać wynik w tabeli wciskając przycisk "Dodaj do kolejki". Po lewej stronie utworzy się tabela i czasy wszystkich zleceń zostaną zsumowane. Algorytm oszacowuje czas wykonania zlecenia od momentu pobrania w kiosku do momentu zaraportowania wykonania zlecenia w IPO. Jeśli operator w ramach jednego zlecenia ma do wykonania 20 kompletów w polu "Podaj ilość" należy wprowadzić 40 sztuk jednej strony.')
-# st.markdown(f'<div class="wrapped-text">{my_info}</div>', unsafe_allow_html=True)
 
-if st.button('Instrukcja obsługi'):
-    show_modal()
+st.button('Instrukcja obsługi', on_click=show_info)
+st.markdown(f'<div class="wrapped-text">{st.session_state["my_info"]}</div>', unsafe_allow_html=True)
 
 # Streamlit input and selection
 col1, col2 = st.columns(2)
