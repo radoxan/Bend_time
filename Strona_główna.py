@@ -138,40 +138,39 @@ st.markdown(f'<div class="wrapped-text">{st.session_state["my_info"]}</div>', un
 # Streamlit input and selection
 col1, col2 = st.columns(2)
 with col1:
-    st.header('1. Wyszukaj element gięty:')
-    options = parts_df['Numer']
-    search_number = st.text_input('Wprowadź początek numeru rysunkowego do wyszukania')
-    wyniki = parts_df[parts_df['Numer'].str.startswith(search_number)]['Numer'].tolist()
-    choosen_draw = st.selectbox("Wybierz jeden z poniższych plików", wyniki)
-    st.text(f'Wybrano plik: {choosen_draw}')
-    choosen_row = parts_df.loc[parts_df['Numer'] == choosen_draw]
-    st.dataframe(choosen_row)
-    capacity = st.number_input('Podaj ilość', step=1, min_value=1)
-    st.session_state['capacity'] = capacity    
-    st.write(f'Ilość elementów do wykonania: {capacity}')
-    try:
-        st.session_state['name'] = choosen_row['Nazwa'].astype(str).iloc[0]
-        st.session_state['index'] = choosen_row['Numer'].astype(str).iloc[0]
-        st.session_state['weight'] = choosen_row['Masa'].astype(float).iloc[0]
-        st.session_state['width'] = choosen_row['Rozwinięcie'].iloc[0]
-        st.session_state['length'] = choosen_row['Długość'].astype(float).iloc[0]
-        st.session_state['bends'] = choosen_row['ilość gięć'].iloc[0]
-    except IndexError:
-        st.warning('Nie znaleziono takiego indeksu')
+    with st.container(border=True):
+        st.header('1. Wyszukaj element gięty:')
+        options = parts_df['Numer']
+        search_number = st.text_input('Wprowadź początek numeru rysunkowego do wyszukania')
+        wyniki = parts_df[parts_df['Numer'].str.startswith(search_number)]['Numer'].tolist()
+        choosen_draw = st.selectbox("Wybierz jeden z poniższych plików", wyniki)
+        st.text(f'Wybrano plik: {choosen_draw}')
+        choosen_row = parts_df.loc[parts_df['Numer'] == choosen_draw]
+        st.dataframe(choosen_row)
+        capacity = st.number_input('Podaj ilość', step=1, min_value=1)
+        st.session_state['capacity'] = capacity    
+        st.write(f'Ilość elementów do wykonania: {capacity}')
+        try:
+            st.session_state['name'] = choosen_row['Nazwa'].astype(str).iloc[0]
+            st.session_state['index'] = choosen_row['Numer'].astype(str).iloc[0]
+            st.session_state['weight'] = choosen_row['Masa'].astype(float).iloc[0]
+            st.session_state['width'] = choosen_row['Rozwinięcie'].iloc[0]
+            st.session_state['length'] = choosen_row['Długość'].astype(float).iloc[0]
+            st.session_state['bends'] = choosen_row['ilość gięć'].iloc[0]
+        except IndexError:
+            st.warning('Nie znaleziono takiego indeksu')
 
-    choosen_row['Ilość'] = st.session_state['capacity']
-    st.button(label="Wczytaj dane wybranego detalu", on_click=przechwyc_wartosci)
+        choosen_row['Ilość'] = st.session_state['capacity']
+        st.button(label="Wczytaj dane wybranego detalu do tabeli po prawej", on_click=przechwyc_wartosci)
 
     
-
-    st.markdown('<hr>', unsafe_allow_html=True)
     
 
 
-
-    st.header('3. Stwórz tabelę:')
-    st.dataframe(st.session_state['choosen_parts'])
-    st.button(label='Wyczyść tabelę', on_click=czysc_tabele)
+    with st.container(border=True):
+        st.header('3. Stwórz tabelę:')
+        st.dataframe(st.session_state['choosen_parts'])
+        st.button(label='Wyczyść tabelę', on_click=czysc_tabele)
     st.header(f'Suma czasu: {st.session_state["sumary_time"]}')
     try:
         sum_price = st.session_state['choosen_parts']['Price'].sum()
@@ -180,40 +179,40 @@ with col1:
     st.header(f'Suma akordu: {sum_price:.4f}zł')
 
 with col2:
-    st.header("2. Wprowadź dane:")
-    name = st.text_input(label="Podaj nazwę", value=st.session_state['input_name'])
-    index = st.text_input(label="Podaj numer rysunku", value=st.session_state['input_index'])
-    length = st.number_input(label="Podaj długość", max_value=float(6100), min_value=float(0), value=float(st.session_state['input_length']), step=float(1))
-    width = st.number_input(label="Podaj rozwinięcie", max_value=float(3000), min_value=float(0), value=float(st.session_state['input_width']), step=float(1))
-    weigth = st.number_input(label="Podaj wagę", min_value=float(0), max_value=float(100), step=float(1), value=float(st.session_state['input_weight']))
-    bends = st.number_input(label="Ilość gięć", step=int(1), min_value=int(0), max_value=int(12), value=int(st.session_state['input_bends']))
-    capacity = st.number_input(label="Ilość sztuk", step=int(1), min_value=int(0), value=int(st.session_state['input_capacity']))
+    with st.container(border=True):
+        st.header("2. Wprowadź dane:")
+        name = st.text_input(label="Podaj nazwę", value=st.session_state['input_name'])
+        index = st.text_input(label="Podaj numer rysunku", value=st.session_state['input_index'])
+        length = st.number_input(label="Podaj długość", max_value=float(6100), min_value=float(0), value=float(st.session_state['input_length']), step=float(1))
+        width = st.number_input(label="Podaj rozwinięcie", max_value=float(3000), min_value=float(0), value=float(st.session_state['input_width']), step=float(1))
+        weigth = st.number_input(label="Podaj wagę", min_value=float(0), max_value=float(100), step=float(1), value=float(st.session_state['input_weight']))
+        bends = st.number_input(label="Ilość gięć", step=int(1), min_value=int(0), max_value=int(12), value=int(st.session_state['input_bends']))
+        capacity = st.number_input(label="Ilość sztuk", step=int(1), min_value=int(0), value=int(st.session_state['input_capacity']))
 
-    st.session_state['new_df'] = pd.DataFrame({
-        'Capacity': [capacity],
-        'Weigth': [weigth],
-        'Width': [width],
-        'Length': [length],
-        'Bends': [bends]
-    })
+        st.session_state['new_df'] = pd.DataFrame({
+            'Capacity': [capacity],
+            'Weigth': [weigth],
+            'Width': [width],
+            'Length': [length],
+            'Bends': [bends]
+        })
 
-    if st.button(label="Oblicz"):
-        if length == 0:
-            st.header("Podaj długość")
-        elif width == 0:
-            st.header('Podaj rozwinięcie')
-        elif weigth == 0:
-            st.header('Podaj wagę')
-        elif bends == 0:
-            st.header('Podaj ilość gięć')
-        elif capacity == 0:
-            st.header('Podaj ilość sztuk')
-        else:
-            predict(capacity, weigth, width, length, bends)
+        if st.button(label="Oblicz czas wykonania zlecenia dla powyższych danych"):
+            if length == 0:
+                st.header("Podaj długość")
+            elif width == 0:
+                st.header('Podaj rozwinięcie')
+            elif weigth == 0:
+                st.header('Podaj wagę')
+            elif bends == 0:
+                st.header('Podaj ilość gięć')
+            elif capacity == 0:
+                st.header('Podaj ilość sztuk')
+            else:
+                predict(capacity, weigth, width, length, bends)
 
-    st.button(label='Dodaj do kolejki', on_click= dodaj_do_kolejki)
+        st.button(label='Dodaj czas do kolejki zleceń po lewej', on_click= dodaj_do_kolejki)
 
-    st.markdown('<hr>', unsafe_allow_html=True)
     wycena = wycena_max(weigth, bends, 0.22, 0.25)
     st.subheader(f'Wycena elementu: {wycena:.4f}zł')
     wycena_zlecenia = wycena * capacity
