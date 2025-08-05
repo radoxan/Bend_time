@@ -1,0 +1,1 @@
+Aplikacja wykonana dla firmy Temared pozwalająca oszacować czas oraz koszt produkcji elementów podczas wykonywania operacji gięcia na prasach krawędziowych. Do jej wykonania wykoszystałem algorytmy uczenia maszynowego PyCaret wytrenowanego na historycznych danych. Interfejs został wykonany Streamlit. Aplikacja została wdrożona na platformie DigitalOcean.
